@@ -28,8 +28,9 @@ echo "!!! Instead download the bridge_dataset from here: https://rail.eecs.berke
 # format: [dataset_name, dataset_version, transforms]
 DATASET_TRANSFORMS=(
     # Datasets used for OpenVLA: https://openvla.github.io/
-    # "cmu_stretch 0.1.0 resize_and_jpeg_encode"
-    # "fractal20220817_data 0.1.0 resize_and_jpeg_encode"
+    "cmu_stretch 0.1.0 resize_and_jpeg_encode"
+    "fractal20220817_data 0.1.0 resize_and_jpeg_encode"
+    "bridge_dataset 1.0.0 resize_and_jpeg_encode"
     "kuka 0.1.0 resize_and_jpeg_encode,filter_success"
     "taco_play 0.1.0 resize_and_jpeg_encode"
     "jaco_play 0.1.0 resize_and_jpeg_encode"
@@ -47,8 +48,6 @@ DATASET_TRANSFORMS=(
     "berkeley_fanuc_manipulation 0.1.0 resize_and_jpeg_encode,flip_wrist_image_channels,flip_image_channels"
     "dobbe 0.0.1 resize_and_jpeg_encode"
     "droid 1.0.0 resize_and_jpeg_encode"
-
-    # "bridge 0.1.0 resize_and_jpeg_encode"
     # "berkeley_cable_routing 0.1.0 resize_and_jpeg_encode"
     # "toto 0.1.0 resize_and_jpeg_encode"
     # "austin_sailor_dataset_converted_externally_to_rlds 0.1.0 resize_and_jpeg_encode"
@@ -64,9 +63,10 @@ for tuple in "${DATASET_TRANSFORMS[@]}"; do
   DATASET=${strings[0]}
   VERSION=${strings[1]}
   TRANSFORM=${strings[2]}
-  mkdir ${DOWNLOAD_DIR}/${DATASET}
-  gsutil cp -r -n gs://gresearch/robotics/${DATASET}/${VERSION} ${DOWNLOAD_DIR}/${DATASET}
-  # python3 modify_rlds_dataset.py --dataset=$DATASET --data_dir=$DOWNLOAD_DIR --target_dir=$CONVERSION_DIR --mods=$TRANSFORM --n_workers=$N_WORKERS --max_episodes_in_memory=$MAX_EPISODES_IN_MEMORY
+  # mkdir ${DOWNLOAD_DIR}/${DATASET}
+  # gsutil cp -r -n gs://gresearch/robotics/${DATASET}/${VERSION} ${DOWNLOAD_DIR}/${DATASET}
+  python3 modify_rlds_dataset.py --dataset=$DATASET --data_dir=$DOWNLOAD_DIR --target_dir=$CONVERSION_DIR --mods=$TRANSFORM --n_workers=$N_WORKERS --max_episodes_in_memory=$MAX_EPISODES_IN_MEMORY
   # rm -rf ${DOWNLOAD_DIR}/${DATASET}
   # mv ${CONVERSION_DIR}/${DATASET} ${DOWNLOAD_DIR}
+  break
 done
